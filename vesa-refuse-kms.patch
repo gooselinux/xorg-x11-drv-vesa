@@ -1,0 +1,18 @@
+diff --git a/src/vesa.c b/src/vesa.c
+index 034a019..f7110b7 100644
+--- a/src/vesa.c
++++ b/src/vesa.c
+@@ -427,6 +427,13 @@ VESAPciProbe(DriverPtr drv, int entity_num, struct pci_device *dev,
+ 	     intptr_t match_data)
+ {
+     ScrnInfoPtr pScrn;
++
++    if (pci_device_has_kernel_driver(dev)) {
++	xf86Msg(X_ERROR, "The PCI device has a kernel module claiming it,\n");
++	xf86Msg(X_ERROR, "this driver cannot operate until it has been unloaded.\n");
++	xf86Msg(X_ERROR, "Try appending \"nomodeset\" to your boot options\n");
++	return FALSE;
++    }
+     
+     pScrn = xf86ConfigPciEntity(NULL, 0, entity_num, NULL, 
+ 				NULL, NULL, NULL, NULL, NULL);

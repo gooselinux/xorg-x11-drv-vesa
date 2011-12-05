@@ -1,0 +1,19 @@
+diff -up xf86-video-vesa-2.2.1/src/vesa.c.jx xf86-video-vesa-2.2.1/src/vesa.c
+--- xf86-video-vesa-2.2.1/src/vesa.c.jx	2010-06-01 12:19:30.000000000 -0400
++++ xf86-video-vesa-2.2.1/src/vesa.c	2010-06-01 12:23:32.000000000 -0400
+@@ -639,8 +639,13 @@ VESAPreInit(ScrnInfoPtr pScrn, int flags
+     else if (depths & V_DEPTH_1)
+ 	defaultDepth = 1;
+ 
+-    if (defaultDepth == 24 && !(flags24 & Support32bppFb))
+-	defaultBpp = 24;
++    /* this is gross */
++    if (defaultDepth == 24 && !(flags24 & Support32bppFb)) {
++	if (depths & V_DEPTH_16)
++	    defaultDepth = 16;
++	else
++	    defaultBpp = 24;
++    }
+ 
+     /* Prefer 32bpp because 1999 called and wants its packed pixels back */
+     if (flags24 & Support32bppFb)
